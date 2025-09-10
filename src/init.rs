@@ -28,6 +28,15 @@ pub fn init() -> Result<()> {
         bail!(RUSTLINGS_DIR_ALREADY_EXISTS_ERR);
     }
 
+    let is_inside_git_repository = Command::new("git")
+        .arg("rev-parse")
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .status()
+        // in case of error, assume not in Git repository
+        .is_ok_and(|status| status.success());
+
     let locate_project_output = Command::new("cargo")
         .arg("locate-project")
         .arg("-q")
@@ -58,7 +67,7 @@ pub fn init() -> Result<()> {
     }
 
     let mut stdout = io::stdout().lock();
-    let mut init_git = true;
+    let mut init_git = !is_inside_git_repository;
 
     if locate_project_output.status.success() {
         if Path::new("exercises").exists() && Path::new("solutions").exists() {
