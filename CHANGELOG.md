@@ -1,5 +1,9 @@
 ## Unreleased
 
+### Added
+
+- Added a new `traits6` exercise.
+
 ## 6.5.0 (2025-08-21)
 
 ### Added
